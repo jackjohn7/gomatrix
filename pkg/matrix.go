@@ -1,7 +1,7 @@
 package matrix
 
 import (
-	"fmt"
+	"errors"
 )
 
 type Matrix struct {
@@ -18,17 +18,42 @@ func New(rows int, cols int) *Matrix {
 	}
 }
 
-func (m Matrix) Get(i int, j int) int {
-	return m.data[(i*m.cols)+(j*m.rows)]
+func FromData(rows int, cols int, data []int) *Matrix {
+	return &Matrix{
+		rows: rows,
+		cols: cols,
+		data: data,
+	}
 }
 
-//func (m Matrix) Cols() []int {
-//	result := make([][]int, m.cols*m.rows)
-//	for i := 0; i < m.rows; i++ {
-//		for j := 0; j < m.cols; j++ {
-//			result[i][j] = m.data[]
-//		}
-//	}
-//
-//	return result
-//}
+func (m Matrix) Get(i int, j int) (int, error) {
+	if i >= m.rows || j >= m.cols {
+		return 0, errors.New("Out of bounds")
+	}
+	return m.data[(i*m.cols)+j], nil
+}
+
+func (m Matrix) Rows() [][]int {
+	result := make([][]int, m.rows)
+	for row := 0; row < m.rows; row++ {
+		result[row] = make([]int, m.cols)
+		for col := 0; col < m.cols; col++ {
+			result[row][col] = m.data[(row*m.cols)+col]
+		}
+	}
+	return result
+}
+
+func (m Matrix) Cols() [][]int {
+	result := make([][]int, m.cols)
+	for i := range result {
+		result[i] = make([]int, m.rows)
+	}
+	for col := 0; col < m.cols; col++ {
+		for row := 0; row < m.rows; row++ {
+			result[col][row] = m.data[(row*m.cols)+col]
+		}
+	}
+
+	return result
+}
