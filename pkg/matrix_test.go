@@ -20,9 +20,8 @@ func TestMatrixGet(t *testing.T) {
 			expected: 1,
 		},
 		{
-			row:      0,
-			col:      1,
-			expected: 2,
+			row: 0,
+			col: 1, expected: 2,
 		},
 		{
 			row:      1,
@@ -85,5 +84,43 @@ func TestCols(t *testing.T) {
 				t.Fatalf("Mismatch: %d != %d\n", v, expected[i][j])
 			}
 		}
+	}
+}
+
+func TestEq(t *testing.T) {
+	m1 := FromData(2, 5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	m2 := FromData(2, 5, []int{11, 12, 13, 14, 15, 16, 17, 18, 19, 20})
+	if m1.Eq(m2) {
+		t.Fatalf("Matrices should not match")
+	}
+
+	m3 := FromData(2, 5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+
+	if !m1.Eq(m3) {
+		t.Fatalf("Matrices should match")
+	}
+}
+
+func TestAdd(t *testing.T) {
+	m1 := FromData(2, 5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	m2 := FromData(2, 5, []int{11, 12, 13, 14, 15, 16, 17, 18, 19, 20})
+	ex := FromData(2, 5, []int{12, 14, 16, 18, 20, 22, 24, 26, 28, 30})
+
+	sum, err := m1.Add(m2)
+	if err != nil {
+		t.Fatalf("Err: %s\n", err.Error())
+	}
+
+	if !sum.Eq(ex) {
+		t.Fatalf("Mismatch: %+v != %+v\n", sum, ex)
+	}
+}
+
+func TestScale(t *testing.T) {
+	m1 := FromData(2, 5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	ex := FromData(2, 5, []int{5, 10, 15, 20, 25, 30, 35, 40, 45, 50})
+	res := m1.Scale(5)
+	if !res.Eq(ex) {
+		t.Fatalf("Mismatch: %+v != %+v\n", res, ex)
 	}
 }
