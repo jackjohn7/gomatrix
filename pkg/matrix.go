@@ -35,12 +35,21 @@ func FromData(rows int, cols int, data []int) *Matrix {
 /*
 Returns the specified value in the matrix or an error when
 accessing out of bounds.
+
+Uses 0-based indexing like arrays do
 */
 func (m Matrix) Get(i int, j int) (int, error) {
 	if i >= m.rows || j >= m.cols {
 		return 0, errors.New("Out of bounds")
 	}
 	return m.data[(i*m.cols)+j], nil
+}
+
+/*
+Returns specified value in matrix without OOB check.
+*/
+func (m Matrix) unsafeGet(i int, j int) int {
+	return m.data[(i*m.cols)+j]
 }
 
 /*
@@ -117,4 +126,39 @@ func (m Matrix) Scale(scalar int) *Matrix {
 	}
 
 	return FromData(m.rows, m.cols, data)
+}
+
+/*
+Returns determinant of square matrix
+*/
+func (m Matrix) Determinant() int {
+	if m.rows == 2 {
+		return (m.unsafeGet(0, 0) * m.unsafeGet(1, 1)) - (m.unsafeGet(0, 1) * m.unsafeGet(1, 0))
+	}
+
+	rows := m.Rows()
+	//cols := m.Cols()
+
+	for _, _ = range rows {
+
+	}
+
+	return -1
+}
+
+func (m Matrix) Minor(r int, c int) int {
+
+	return -1
+}
+
+func (m Matrix) Cofactor(r int, c int) int {
+	return -1
+}
+
+func (m Matrix) Copy() *Matrix {
+	return FromData(m.rows, m.cols, m.data)
+}
+
+func (m Matrix) WithoutRow(row int) *Matrix {
+	return nil
 }
